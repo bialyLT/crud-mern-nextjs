@@ -19,20 +19,22 @@ mongoose.connect(process.env.MONGO_URI)
 app.use(cors());
 
 // parseamos la informacion del cuerpo de las peticiones http
+app.use(express.urlencoded({extends: true}));
 app.use(express.json());
 
 // ruta para crear usuario
 app.post('/users', async (req, res) => {
     const { username, name, lastname, age } = req.body;
+    console.log({username, name, lastname, age: +age});
     try {
         const userSaved = new User({
             username,
             name,
             lastname,
-            age
+            age: +age
         });
         const user = await userSaved.save();
-        res.send(user);
+        res.json(user);
     } catch (err) {
         console.error("error:", err);
         res.send("error al crear el usuario");
@@ -43,6 +45,7 @@ app.post('/users', async (req, res) => {
 app.get('/users', async (req, res) => {
     User.find()
         .sort({ name: 1 })
+        .exec()
         .then(users => {
             res.send(users);
         })
