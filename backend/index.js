@@ -47,11 +47,11 @@ app.get('/users', async (req, res) => {
         .sort({ name: 1 })
         .exec()
         .then(users => {
-            res.send(users);
+            res.json(users);
         })
         .catch(err => {
             console.error(err);
-            res.send("No hay ningun usuario registrado");
+            res.sendStatus(404);
         })
 })
 
